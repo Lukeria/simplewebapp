@@ -7,24 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
 
     @Autowired
     private DefaultEmployeeService employeeService;
 
+
     @GetMapping("/")
-    public void index(HttpServletResponse response) throws IOException {
-
-        response.sendRedirect("/employee/list");
-    }
-
-    @GetMapping("/list")
     public List<Employee> getEmployeeList() {
 
         return employeeService.findAll();
@@ -33,11 +26,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Employee getEmployee(@PathVariable Long id) {
 
-        return employeeService.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
+        return employeeService.findById(id);
+
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public Employee addEmployee(@RequestBody Employee employee) {
 
         return employeeService.save(employee);
@@ -46,25 +39,14 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long id) {
 
-        return employeeService.findById(id)
-                .map(employeeToUpdate -> {
-                    employeeToUpdate.setFirstName(employee.getFirstName());
-                    employeeToUpdate.setLastName(employee.getLastName());
-                    employeeToUpdate.setDepartment(employee.getDepartment());
-                    employeeToUpdate.setJobTitle(employee.getJobTitle());
-                    employeeToUpdate.setGender(employee.getGender());
-                    employeeToUpdate.setDateOfBirth(employee.getDateOfBirth());
-                    return employeeService.update(employeeToUpdate);
-                })
-                .orElseThrow(()->new EmployeeNotFoundException(id));
+        return employeeService.update(employee, id);
+
     }
 
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable Long id) {
 
-        if(employeeService.deleteById(id) == 0){
-            throw new EmployeeNotFoundException(id);
-        };
+        employeeService.deleteById(id);
 
     }
 

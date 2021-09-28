@@ -9,11 +9,11 @@ public interface DefaultEmployeeService {
 
     Employee save(Employee employee);
 
-    Employee update(Employee employee);
+    Employee update(Employee employee, Long id);
 
-    int deleteById(Long id);
+    void deleteById(Long id);
 
     List<Employee> findAll();
 
-    Optional<Employee> findById(Long id);
+    Employee findById(Long id);
 }

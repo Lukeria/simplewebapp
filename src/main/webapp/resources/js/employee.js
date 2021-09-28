@@ -27,7 +27,7 @@ $(document).ready(function () {
 function getEmployeeList() {
     $.ajax({
         type: "GET",
-        url: "/employee/list",
+        url: "/employees/",
         success: function (response) {
 
             if (Array.isArray(response)) {
@@ -47,7 +47,7 @@ function getEmployee(id) {
 
     $.ajax({
         type: "GET",
-        url: "/employee/" + id,
+        url: "/employees/" + id,
         success: function (response) {
 
             let employeeInfo = $('#employeeInfo');
@@ -65,7 +65,7 @@ function deleteEmployee(id, currentRow) {
 
     $.ajax({
         type: "DELETE",
-        url: "/employee/" + id,
+        url: "/employees/" + id,
         success: function () {
             currentRow.remove();
         },
@@ -80,7 +80,7 @@ function updateEmployee(id) {
     let employee = createEmployeeObject();
     $.ajax({
         type: "PUT",
-        url: "/employee/" + id,
+        url: "/employees/" + id,
         contentType: "application/json",
         data: JSON.stringify(employee),
         success: function (response) {
@@ -98,7 +98,7 @@ function saveEmployee() {
     let employee = createEmployeeObject();
     $.ajax({
         type: "POST",
-        url: "/employee/add",
+        url: "/employees/",
         contentType: "application/json",
         data: JSON.stringify(employee),
         success: function (response) {

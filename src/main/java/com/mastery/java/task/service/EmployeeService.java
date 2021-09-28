@@ -2,11 +2,11 @@ package com.mastery.java.task.service;
 
 import com.mastery.java.task.dao.DefaultEmployeeDao;
 import com.mastery.java.task.dto.Employee;
+import com.mastery.java.task.exceptions.EmployeeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeService implements DefaultEmployeeService{
@@ -21,15 +21,27 @@ public class EmployeeService implements DefaultEmployeeService{
     }
 
     @Override
-    public Employee update(Employee employee) {
+    public Employee update(Employee employee, Long id) {
 
-        return employeeDao.update(employee);
+        return employeeDao.findById(id)
+                .map(employeeToUpdate -> {
+                    employeeToUpdate.setFirstName(employee.getFirstName());
+                    employeeToUpdate.setLastName(employee.getLastName());
+                    employeeToUpdate.setDepartment(employee.getDepartment());
+                    employeeToUpdate.setJobTitle(employee.getJobTitle());
+                    employeeToUpdate.setGender(employee.getGender());
+                    employeeToUpdate.setDateOfBirth(employee.getDateOfBirth());
+                    return employeeDao.update(employeeToUpdate);
+                })
+                .orElseThrow(()->new EmployeeNotFoundException(id));
     }
 
     @Override
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
 
-        return employeeDao.deleteById(id);
+        if(employeeDao.deleteById(id)== 0){
+            throw new EmployeeNotFoundException(id);
+        };
     }
 
     @Override
@@ -39,8 +51,9 @@ public class EmployeeService implements DefaultEmployeeService{
     }
 
     @Override
-    public Optional<Employee> findById(Long id) {
+    public Employee findById(Long id) {
 
-        return employeeDao.findById(id);
+        return employeeDao.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 }
