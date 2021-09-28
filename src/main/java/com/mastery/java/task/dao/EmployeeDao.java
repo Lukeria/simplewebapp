@@ -3,13 +3,13 @@ package com.mastery.java.task.dao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class EmployeeDao implements DefaultEmployeeDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private DataSource dataSource;
 
     private final String UPDATE_SQL = "update employee set first_name = :first_name, last_name = :last_name," +
             "department_id = :department_id, job_title = :job_title, gender = :gender, " +
@@ -44,7 +44,7 @@ public class EmployeeDao implements DefaultEmployeeDao {
                 .addValue("gender", employee.getGender() == null ? "" : employee.getGender().toString())
                 .addValue("date_of_birth", employee.getDateOfBirth());
 
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 
         simpleJdbcInsert.withTableName("employee").usingGeneratedKeyColumns("employee_id");
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);

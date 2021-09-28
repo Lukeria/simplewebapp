@@ -3,6 +3,7 @@ package com.mastery.java.task.service;
 import com.mastery.java.task.dao.DefaultEmployeeDao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
+import com.mastery.java.task.exceptions.EmployeeNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +53,10 @@ public class EmployeeServiceTest {
 
         doReturn(Optional.of(employee)).when(employeeDao).findById(8L);
 
-        Optional<Employee> employeeResult = employeeService.findById(8L);
+        Employee employeeResult = employeeService.findById(8L);
 
-        Assertions.assertTrue(employeeResult.isPresent());
-        Assertions.assertEquals(employee, employeeResult.get());
-        Assertions.assertNotNull(employeeResult.get());
+        Assertions.assertEquals(employee, employeeResult);
+        Assertions.assertNotNull(employeeResult);
 
     }
 
@@ -65,14 +65,14 @@ public class EmployeeServiceTest {
 
         doReturn(Optional.empty()).when(employeeDao).findById(10L);
 
-        Optional<Employee> employeeResult = employeeService.findById(8L);
-
-        Assertions.assertFalse(employeeResult.isPresent());
+        Assertions.assertThrows(EmployeeNotFoundException.class, () -> {
+            employeeService.findById(8L);
+        });
 
     }
 
     @Test
-    public void testSave(){
+    public void testSave() {
 
         Employee employee = new Employee(8L, "Monica", "Geller", 0L,
                 "developer", Gender.FEMALE, LocalDate.of(1985, 2, 11));
@@ -87,14 +87,15 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testUpdate(){
+    public void testUpdate() {
 
         Employee employee = new Employee(8L, "Monica", "Geller", 0L,
                 "developer", Gender.FEMALE, LocalDate.of(1985, 2, 11));
 
+        doReturn(Optional.of(employee)).when(employeeDao).findById(8L);
         doReturn(employee).when(employeeDao).update(employee);
 
-        Employee employeeResult = employeeService.update(employee);
+        Employee employeeResult = employeeService.update(employee, 8L);
 
         Assertions.assertEquals(employee, employeeResult);
         Assertions.assertNotNull(employeeResult);
@@ -102,12 +103,12 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() {
 
         doReturn(8).when(employeeDao).deleteById(8L);
 
-        int result = employeeService.deleteById(8L);
-
-        Assertions.assertNotEquals(0, result);
+        Assertions.assertDoesNotThrow(() -> {
+            employeeService.deleteById(8L);
+        });
     }
 }

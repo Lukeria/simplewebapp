@@ -1,0 +1,13 @@
+{
+  "employeeId": 1,
+  "firstName": "Monica",
+  "lastName": "Geller",
+  "jobTitle": "developer",
+  "gender": "FEMALE",
+  "dateOfBirth": [
+    1985,
+    2,
+    11
+  ],
+  "department": 0
+}

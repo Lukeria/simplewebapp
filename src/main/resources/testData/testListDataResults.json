@@ -1,0 +1,28 @@
+[
+  {
+    "employeeId": 7,
+    "firstName": "John",
+    "lastName": "Jonson",
+    "jobTitle": "developer",
+    "gender": "MALE",
+    "dateOfBirth": [
+      1980,
+      9,
+      21
+    ],
+    "department": 0
+  },
+  {
+    "employeeId": 8,
+    "firstName": "Monica",
+    "lastName": "Geller",
+    "jobTitle": "developer",
+    "gender": "FEMALE",
+    "dateOfBirth": [
+      1985,
+      2,
+      11
+    ],
+    "department": 0
+  }
+]
