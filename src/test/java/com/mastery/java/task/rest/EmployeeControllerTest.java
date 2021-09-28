@@ -91,7 +91,9 @@ public class EmployeeControllerTest {
 
         doReturn(employee).when(employeeService).findById(1L);
 
-        mockMvc.perform(get("/employees/{id}", 8L))
+        mockMvc.perform(get("/employees/{id}", 1L))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(testResult))
                 .andExpect(status().isOk());
 
     }
@@ -127,14 +129,16 @@ public class EmployeeControllerTest {
     public void testUpdateEmployee() throws Exception {
 
         Employee employeeToSave = new Employee(1L, "Monica", "Geller", 0L,
-                "HR", Gender.FEMALE, LocalDate.of(1988, 2, 11));
+                "developer", Gender.FEMALE, LocalDate.of(1985, 2, 11));
 
-        doReturn(employeeToSave).when(employeeService).update(employeeToSave, 8L);
+        doReturn(employeeToSave).when(employeeService).update(employeeToSave, 1L);
 
         mockMvc.perform(put("/employees/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeToSave)))
 
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(testResult))
                 .andExpect(status().isOk());
     }
 
