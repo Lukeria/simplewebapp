@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -19,8 +21,9 @@ public class EmployeeDao implements DefaultEmployeeDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    private DataSource dataSource;
+    private final String INSERT_SQL = "insert into employee(first_name,last_name," +
+            " department_id, job_title, gender, date_of_birth) values(:first_name,:last_name," +
+            ":department_id, :job_title, :gender, :date_of_birth)";
 
     private final String UPDATE_SQL = "update employee set first_name = :first_name, last_name = :last_name," +
             "department_id = :department_id, job_title = :job_title, gender = :gender, " +
@@ -35,8 +38,9 @@ public class EmployeeDao implements DefaultEmployeeDao {
     @Override
     public Employee save(Employee employee) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("employee_id", employee.getEmployeeId())
                 .addValue("first_name", employee.getFirstName())
                 .addValue("last_name", employee.getLastName())
                 .addValue("department_id", employee.getDepartment())
@@ -44,12 +48,9 @@ public class EmployeeDao implements DefaultEmployeeDao {
                 .addValue("gender", employee.getGender() == null ? "" : employee.getGender().toString())
                 .addValue("date_of_birth", employee.getDateOfBirth());
 
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+        namedParameterJdbcTemplate.update(INSERT_SQL, parameters, keyHolder, new String[]{"employee_id"});
 
-        simpleJdbcInsert.withTableName("employee").usingGeneratedKeyColumns("employee_id");
-        Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
-
-        employee.setEmployeeId(id.longValue());
+        employee.setEmployeeId(keyHolder.getKey().longValue());
 
         return employee;
     }
@@ -96,6 +97,6 @@ public class EmployeeDao implements DefaultEmployeeDao {
                 parameters,
                 new EmployeeMapper());
 
-        return  employees.stream().findFirst();
+        return employees.stream().findFirst();
     }
 }

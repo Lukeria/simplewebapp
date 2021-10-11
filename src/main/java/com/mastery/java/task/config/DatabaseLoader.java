@@ -29,9 +29,7 @@ public class DatabaseLoader implements CommandLineRunner {
         jdbcTemplate.execute(
                 "create table employee\n" +
                         "(\n" +
-                        "    employee_id   serial      not null\n" +
-                        "        constraint employee_pkey\n" +
-                        "            primary key,\n" +
+                        "    employee_id   bigserial       primary key,\n" +
                         "    first_name    varchar(100) not null,\n" +
                         "    last_name     varchar(100),\n" +
                         "    department_id integer,\n"+
@@ -42,9 +40,9 @@ public class DatabaseLoader implements CommandLineRunner {
         );
 
         List<Employee> employees = Arrays.asList(
-                new Employee(1L, "Karina", "Lukashevich", 2L,
+                new Employee(null, "Karina", "Lukashevich", 2L,
                         "Developer", Gender.FEMALE, LocalDate.of(2000, 8, 30)),
-                new Employee(2L, "Ivan", "Ivanov", 1L,
+                new Employee(null, "Ivan", "Ivanov", 1L,
                         "Developer", Gender.MALE, LocalDate.of(1991, 1, 1))
         );
 
