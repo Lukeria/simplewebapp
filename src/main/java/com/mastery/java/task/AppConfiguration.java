@@ -18,6 +18,4 @@ public class AppConfiguration extends SpringBootServletInitializer {
 
         SpringApplication.run(AppConfiguration.class, args);
     }
-
-
 }
