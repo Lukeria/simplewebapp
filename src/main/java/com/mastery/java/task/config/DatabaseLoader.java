@@ -15,11 +15,15 @@ import java.util.List;
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    private final DefaultEmployeeDao employeeDao;
 
     @Autowired
-    private DefaultEmployeeDao employeeDao;
+    public DatabaseLoader(JdbcTemplate jdbcTemplate, DefaultEmployeeDao employeeDao) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.employeeDao = employeeDao;
+    }
 
     @Override
     public void run(String... args) {

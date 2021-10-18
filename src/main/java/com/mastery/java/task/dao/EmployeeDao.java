@@ -6,20 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class EmployeeDao implements DefaultEmployeeDao {
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final String INSERT_SQL = "insert into employee(first_name,last_name," +
             " department_id, job_title, gender, date_of_birth) values(:first_name,:last_name," +
@@ -34,6 +31,11 @@ public class EmployeeDao implements DefaultEmployeeDao {
     private final String SELECT_ALL = "select * from employee";
 
     private final String SELECT_BY_ID_SQL = "select * from employee where employee_id = :employee_id";
+
+    @Autowired
+    public EmployeeDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     @Override
     public Employee save(Employee employee) {
