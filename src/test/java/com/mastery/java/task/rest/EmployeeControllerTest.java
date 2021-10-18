@@ -3,7 +3,7 @@ package com.mastery.java.task.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
-import com.mastery.java.task.exceptions.EmployeeNotFoundException;
+import com.mastery.java.task.exceptions.EmployeeServiceNotFoundException;
 import com.mastery.java.task.service.DefaultEmployeeService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -148,7 +148,7 @@ public class EmployeeControllerTest {
         Employee employeeToSave = new Employee(1L, "Monica", "Geller", 0L,
                 "HR", Gender.FEMALE, LocalDate.of(1988, 2, 11));
 
-        doThrow(EmployeeNotFoundException.class).when(employeeService).update(employeeToSave, 8L);
+        doThrow(EmployeeServiceNotFoundException.class).when(employeeService).update(employeeToSave, 8L);
 
         mockMvc.perform(put("/employees/{id}", 8L)
                         .contentType(MediaType.APPLICATION_JSON)

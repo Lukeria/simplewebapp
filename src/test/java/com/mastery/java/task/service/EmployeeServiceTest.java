@@ -3,7 +3,7 @@ package com.mastery.java.task.service;
 import com.mastery.java.task.dao.DefaultEmployeeDao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
-import com.mastery.java.task.exceptions.EmployeeNotFoundException;
+import com.mastery.java.task.exceptions.EmployeeServiceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class EmployeeServiceTest {
 
         doReturn(Optional.empty()).when(employeeDao).findById(10L);
 
-        Assertions.assertThrows(EmployeeNotFoundException.class, () -> {
+        Assertions.assertThrows(EmployeeServiceNotFoundException.class, () -> {
             employeeService.findById(8L);
         });
 

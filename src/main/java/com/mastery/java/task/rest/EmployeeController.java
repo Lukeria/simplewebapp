@@ -1,7 +1,7 @@
 package com.mastery.java.task.rest;
 
 import com.mastery.java.task.dto.Employee;
-import com.mastery.java.task.exceptions.EmployeeNotFoundException;
+import com.mastery.java.task.exceptions.EmployeeServiceNotFoundException;
 import com.mastery.java.task.service.DefaultEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,12 @@ import java.util.List;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    @Autowired
-    private DefaultEmployeeService employeeService;
+    private final DefaultEmployeeService employeeService;
 
+    @Autowired
+    public EmployeeController(DefaultEmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @GetMapping("/")
     public List<Employee> getEmployeeList() {
@@ -51,9 +54,9 @@ public class EmployeeController {
     }
 
     @ResponseBody
-    @ExceptionHandler(EmployeeNotFoundException.class)
+    @ExceptionHandler(EmployeeServiceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String employeeNotFoundHandler(EmployeeNotFoundException exception) {
+    public String employeeNotFoundHandler(EmployeeServiceNotFoundException exception) {
 
         return exception.getMessage();
     }
